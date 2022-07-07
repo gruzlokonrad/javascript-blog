@@ -1,3 +1,26 @@
+const generationListTitles = () => {
+  const listTitles = document.querySelector('h2.section-title + ul.list.titles');
+
+  // clear title list
+  listTitles.innerHTML = "";
+
+
+  // list title generation by js
+  const articles = document.querySelectorAll('article');
+  for (let article of articles) {
+    const articleId = "#" + article.getAttribute('id');
+    const articleTitle = article.querySelector('h3.post-title').textContent;
+    const link = `<li><a href=${articleId}><span> ${articleTitle} </span></a></li>`;
+    listTitles.insertAdjacentHTML("beforeend", link);
+  }
+
+  // add event listeners
+  const links = document.querySelectorAll('.titles a');
+  for (let link of links) {
+    link.addEventListener('click', titleClickHandler);
+  }
+}
+
 const titleClickHandler = function (event) {
   event.preventDefault();
   const clickedElement = this;
@@ -18,18 +41,16 @@ const titleClickHandler = function (event) {
     activeArticle.classList.remove('active');
   }
 
-  /* get 'href' attribute from the clicked link */
+  /*[DONE] get 'href' attribute from the clicked link */
   const getHrefAttribute = clickedElement.getAttribute('href');
 
-  /* find the correct article using the selector (value of 'href' attribute) */
+  /*[DONE] find the correct article using the selector (value of 'href' attribute) */
   const findArticle = document.querySelector(getHrefAttribute)
 
-  /* add class 'active' to the correct article */
+  /*[DONE] add class 'active' to the correct article */
   findArticle.classList.add('active');
 }
 
-const links = document.querySelectorAll('.titles a');
 
-for (let link of links) {
-  link.addEventListener('click', titleClickHandler);
-}
+// run generation list of titles
+generationListTitles();
