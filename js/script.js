@@ -2,16 +2,16 @@ const generationListTitles = () => {
   const listTitles = document.querySelector('h2.section-title + ul.list.titles');
 
   // clear title list
-  listTitles.innerHTML = "";
+  listTitles.innerHTML = '';
 
 
   // list title generation by js
   const articles = document.querySelectorAll('article');
   for (let article of articles) {
-    const articleId = "#" + article.getAttribute('id');
+    const articleId = '#' + article.getAttribute('id');
     const articleTitle = article.querySelector('h3.post-title').textContent;
     const link = `<li><a href=${articleId}><span> ${articleTitle} </span></a></li>`;
-    listTitles.insertAdjacentHTML("beforeend", link);
+    listTitles.insertAdjacentHTML('beforeend', link);
   }
 
   // add event listeners
@@ -19,7 +19,7 @@ const generationListTitles = () => {
   for (let link of links) {
     link.addEventListener('click', titleClickHandler);
   }
-}
+};
 
 const titleClickHandler = function (event) {
   event.preventDefault();
@@ -45,11 +45,11 @@ const titleClickHandler = function (event) {
   const getHrefAttribute = clickedElement.getAttribute('href');
 
   /*[DONE] find the correct article using the selector (value of 'href' attribute) */
-  const findArticle = document.querySelector(getHrefAttribute)
+  const findArticle = document.querySelector(getHrefAttribute);
 
   /*[DONE] add class 'active' to the correct article */
   findArticle.classList.add('active');
-}
+};
 
 
 // run generation list of titles
