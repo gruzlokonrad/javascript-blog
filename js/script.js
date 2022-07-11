@@ -1,4 +1,4 @@
-const generationListTitles = () => {
+const generateListTitles = () => {
   const listTitles = document.querySelector('h2.section-title + ul.list.titles');
 
   // clear title list
@@ -72,23 +72,12 @@ const generateTags = () => {
 }
 
 
-// [DONE]
-  /* find all articles */
-  /* START LOOP: for every article: */
-  /* find tags wrapper */
-  /* make html variable with empty string ???*/
-  /* get tags from data-tags attribute */
-  /* split tags into array */
-  /* START LOOP: for each tag */
-  /* generate HTML of the link */
-  /* add generated code to html variable */
-  /* END LOOP: for each tag */
-  /* insert HTML of all the links into the tags wrapper */
-  /* END LOOP: for every article: */
 
 
-// run generation list of titles
-generationListTitles();
 
-//run generation tag
+//run generate list of titles
+generateListTitles();
+
+//run generate tag
 generateTags();
+
