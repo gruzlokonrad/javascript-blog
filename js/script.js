@@ -52,5 +52,43 @@ const titleClickHandler = function (event) {
 };
 
 
+//function tag generation
+const generateTags = () => {
+  const optArticleTagsSelector = '.post-tags ul.list';
+  const allArticles = document.querySelectorAll('article.post');
+
+  for (let singelArticle of allArticles) {
+    const dataTags = singelArticle.querySelector(optArticleTagsSelector);
+    const tags = singelArticle.getAttribute('data-tags')
+    const tagsArray = tags.split(' ');
+    const singelTagElement = tagsArray.map(element => {
+      const link = "#tag-" + element ;
+      const tagElement = "#" + element
+      return `<li><a href=${link}>${tagElement}</a></li>`
+  })
+    dataTags.innerHTML = singelTagElement.join(' ');
+  }
+
+}
+
+
+// [DONE]
+  /* find all articles */
+  /* START LOOP: for every article: */
+  /* find tags wrapper */
+  /* make html variable with empty string ???*/
+  /* get tags from data-tags attribute */
+  /* split tags into array */
+  /* START LOOP: for each tag */
+  /* generate HTML of the link */
+  /* add generated code to html variable */
+  /* END LOOP: for each tag */
+  /* insert HTML of all the links into the tags wrapper */
+  /* END LOOP: for every article: */
+
+
 // run generation list of titles
 generationListTitles();
+
+//run generation tag
+generateTags();
