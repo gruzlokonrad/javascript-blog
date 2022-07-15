@@ -1,18 +1,30 @@
-const generateListTitles = () => {
-  const listTitles = document.querySelector('h2.section-title + ul.list.titles');
+const optArticleTagsSelector = '.post-tags ul.list';
 
-  // clear title list
-  listTitles.innerHTML = '';
-
+// generate list titles
+const generateListTitles = (filterArticle = '') => {
+  const listTitles = document.querySelector('aside.sidebar ul.list.titles');
 
   // list title generation by js
-  const articles = document.querySelectorAll('article');
-  for (let article of articles) {
-    const articleId = '#' + article.getAttribute('id');
-    const articleTitle = article.querySelector('h3.post-title').textContent;
-    const link = `<li><a href=${articleId}><span> ${articleTitle} </span></a></li>`;
-    listTitles.insertAdjacentHTML('beforeend', link);
-  }
+  if (filterArticle === '') {
+    const articles = document.querySelectorAll('article');
+    for (let article of articles) {
+      const articleId = '#' + article.getAttribute('id');
+      const articleTitle = article.querySelector('h3.post-title').textContent;
+      const link = `<li><a href=${articleId}><span> ${articleTitle} </span></a></li>`;
+      listTitles.insertAdjacentHTML('beforeend', link);
+    } 
+  } 
+  // else {
+  //   // console.log('new fn: ', filterArticle);
+  //   const articles = filterArticle;
+  //   for (let article of articles) {
+  //     // console.log(article);
+  //     // const articleId = '#' + article.getAttribute('id');
+  //     // const articleTitle = article.querySelector('h3.post-title').textContent;
+  //     // const link = `<li><a href=${articleId}><span> ${articleTitle} </span></a></li>`;
+  //     // listTitles.insertAdjacentHTML('beforeend', link);
+  //   } 
+  // }
 
   // add event listeners
   const links = document.querySelectorAll('.titles a');
@@ -54,25 +66,62 @@ const titleClickHandler = function (event) {
 
 //function tag generation
 const generateTags = () => {
-  const optArticleTagsSelector = '.post-tags ul.list';
   const allArticles = document.querySelectorAll('article.post');
 
   for (let singelArticle of allArticles) {
     const dataTags = singelArticle.querySelector(optArticleTagsSelector);
-    const tags = singelArticle.getAttribute('data-tags')
+    const tags = singelArticle.getAttribute('data-tags');
     const tagsArray = tags.split(' ');
     const singelTagElement = tagsArray.map(element => {
-      const link = "#tag-" + element ;
-      const tagElement = "#" + element
-      return `<li><a href=${link}>${tagElement}</a></li>`
-  })
+      const link = '#tag-' + element;
+      const tagElement = '#' + element;
+      return `<li><a href=${link}>${tagElement}</a></li>`;
+    });
     dataTags.innerHTML = singelTagElement.join(' ');
   }
 
-}
+};
+
+//select tag function
+const getAllLinksTag = () => {
+  const getAllLinkTags = document.querySelectorAll(optArticleTagsSelector + ' a');
+
+  for (let singelTagLink of getAllLinkTags) {
+    singelTagLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const clickedTag = e.target;
+      const clickedTagHrefValue = clickedTag.getAttribute('href');
+      getAllActiveLinksTag(clickedTagHrefValue);
+    });
+  }
+};
 
 
+// add active class for selected tag
+const getAllActiveLinksTag = (clickedTagHrefValue) => {
+  // const allListTags = document.querySelectorAll(optArticleTagsSelector + ' a');
+  const allListTags = document.querySelectorAll('article');
+  let active = document.querySelector('section.posts');
+  for (let element of allListTags) {
+    const singelTags = element.querySelector('ul.list a');
+    if (singelTags.getAttribute('href') === clickedTagHrefValue) {
+      singelTags.classList.toggle('active');
+    }
+    // console.log(activeClass);
+  }
+  
+  for (let element of allListTags) {
+    const activeClass = element.querySelector('.post-tags a.active');
+    if (activeClass) {
+      console.log(element);
+      active.appendChild(element);
+    }
+  }
+  // const allActiveListTags = document.querySelectorAll(optArticleTagsSelector + ' a.active');
+  // console.log(allListTags)
+  generateListTitles(active);
 
+};
 
 
 //run generate list of titles
@@ -81,3 +130,5 @@ generateListTitles();
 //run generate tag
 generateTags();
 
+//run singel tag click
+getAllLinksTag();
