@@ -1,6 +1,8 @@
 const articlesSection = document.querySelector('section.posts');
 let articles = document.querySelectorAll('article');
 const listTitles = document.querySelector('aside .list.titles');
+const listAuthors = document.querySelector('aside .list.authors');
+let activeAuthor;
 // console.log(articles)
 
 const addTagEventListener = () => {
@@ -10,13 +12,24 @@ const addTagEventListener = () => {
   }
 }
 
-
-const addAuthorEventListener = () => {
-  const articleAuthors = articles.querySelectorAll('li a');
-  for (let articleAuthor of articleAuthors) {
-    articleAuthor.addEventListener('click', titleClickHandler);
+const addTitleEventListener = () => {
+  const articleTitles = articlesSection.querySelectorAll('.post-author');
+  for (let articleTitle of articleTitles) {
+    articleTitle.addEventListener('click', titleClickHandler);
   }
 }
+
+const addAuthorEventListener = () => {
+  const authors = listAuthors.querySelectorAll('a');
+  for (let author of authors) {
+    author.addEventListener('click', authorClickHandler);
+  }
+}
+
+const checkActiveAuthor = () => {
+  activeAuthor = listAuthors.querySelector('.active');
+  return activeAuthor;
+};
 
 // const clearClassActive = (listElement) => {
 //   for (let item of listElement) {
@@ -96,6 +109,62 @@ const titleClickHandler = function (event) {
   }
 };
 
+const authorClickHandler = function (event) {
+  event.preventDefault();
+  const clickedElement = this;
+  checkActiveAuthor();
+
+  if (activeAuthor) {
+    if(clickedElement === activeAuthor){
+      activeAuthor.classList.toggle('active');
+    } else {
+      activeAuthor.classList.remove('active');
+      clickedElement.classList.add('active');
+    }
+  } else {
+    clickedElement.classList.add('active');
+  }
+  checkActiveAuthor();
+  
+  const selectedAuthor = clickedElement.textContent;
+  const selectedArticles = document.querySelectorAll(`[data-author='${selectedAuthor}']`);
+
+
+  if (!activeAuthor) {
+    generateListTitles()
+  } else {
+    const articlesArray = []
+    for (let element of selectedArticles) {
+      articlesArray.push(element)
+    }
+    generateListTitles(articlesArray)
+  }
+};
+
+const generateListAuthors = () => {
+  const allAuthorsArray = [];
+
+  for (article of articles) {
+    const wrapperAuthor = article.querySelector('.post-author');
+    let author = wrapperAuthor.textContent.replace('by ', '')
+    article.setAttribute('data-author', author)
+    wrapperAuthor.remove();
+    author = article.getAttribute('data-author');
+    allAuthorsArray.push(author)
+  }
+
+  const authorsArray = allAuthorsArray.filter(
+    (item, index) => allAuthorsArray.indexOf(item) === index
+  );
+
+  authorsArray.forEach(author => {
+    const linkAuthor = `<li><a href="#">${author}</a></li>`;
+    listAuthors.insertAdjacentHTML('beforeend', linkAuthor);
+  })
+
+  addAuthorEventListener();
+};
+
 const generateTags = () => {
   for (let article of articles) {
     const listTags = article.querySelector('ul.list');
@@ -116,3 +185,6 @@ generateTags();
 
 //run generate list of titles
 generateListTitles();
+
+//run generate list of author
+generateListAuthors();
