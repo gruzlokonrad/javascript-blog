@@ -1,39 +1,79 @@
 const articlesSection = document.querySelector('section.posts');
-const articles = document.querySelectorAll('article');
+let articles = document.querySelectorAll('article');
 const listTitles = document.querySelector('aside .list.titles');
+// console.log(articles)
 
-
-const generateArticles = (articlesList) => {
-  if(articlesList) {
-    articlesSection.innerHTML = '';
-    for(article of articlesList) {
-      articlesSection.insertAdjacentHTML('beforend', article.outerHTML);
-    }
+const addTagEventListener = () => {
+  const tagsLinks = document.querySelectorAll('a[href^="#tag-"');
+  for (let tagLinks of tagsLinks) {
+    tagLinks.addEventListener('click', tagClickHandler);
   }
-  document.querySelector('article').classList.add('active');
-};
-
-//does not work
-const tagClickHendler = function (e) {
-  e.preventDefault();
-  const clickedElement = this;
-  console.log(clickedElement);
-
 }
 
-const generateListTitles = () => {
-  for (let article of articles) {
+
+const addAuthorEventListener = () => {
+  const articleAuthors = articles.querySelectorAll('li a');
+  for (let articleAuthor of articleAuthors) {
+    articleAuthor.addEventListener('click', titleClickHandler);
+  }
+}
+
+// const clearClassActive = (listElement) => {
+//   for (let item of listElement) {
+//     if (item.className === "active") {
+//       item.classList.remove('active');
+//     }
+//   };
+// }
+
+
+
+const tagClickHandler = function (e) {
+  e.preventDefault();
+  const clickedElement = this;
+
+  const tagClicked = clickedElement.getAttribute('href');
+  const selectedTagList = document.querySelectorAll(`a[href='${tagClicked}']`);
+  for (let element of selectedTagList) {
+    element.classList.toggle('active');
+  }
+
+  const selectedTag = tagClicked.replace('#tag-', '')
+  const selectedArticles = document.querySelectorAll(`[data-tags*='${selectedTag}']`);
+
+  if (!selectedTagList[0].classList.contains('active')) {
+    generateListTitles()
+  } else {
+    const articlesArray = []
+    for (let element of selectedArticles) {
+      articlesArray.push(element)
+    }
+    generateListTitles(articlesArray)
+  }
+}
+
+const generateListTitles = (articlesList = articles) => {
+  listTitles.innerHTML = '';
+
+  for (let article of articlesList) {
     const articleTitle = article.querySelector('.post-title');
     const articleId = '#' + article.getAttribute('id');
-    const linkArticleTitle = `<li><a href=${articleId}>${articleTitle.innerHTML}</a></li>`;
+    const linkArticleTitle = `<li><a href="${articleId}">${articleTitle.innerHTML}</a></li>`;
     listTitles.insertAdjacentHTML('beforeend', linkArticleTitle);
     listTitles.classList.remove('active');
   }
-  // listTitles.querySelector('li').classList.add('active');
-  const articleTitles = listTitles.querySelectorAll('li a');
-  for (let articleTitle of articleTitles) {
-    articleTitle.addEventListener('click', titleClickHandler);
+
+  listTitles.querySelector('a').classList.add('active');
+  const firstArticleId = listTitles.children[0].children[0].getAttribute('href').replace('#', '');
+  for (let el of articles) {
+    if (el.id === firstArticleId) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
   }
+
+  addTitleEventListener();
 };
 
 const titleClickHandler = function (event) {
@@ -50,9 +90,9 @@ const titleClickHandler = function (event) {
     const title = article.querySelector('.post-title').textContent;
     const clickedTitle = clickedElement.textContent;
     article.classList.remove('active');
-    if(clickedTitle === title) {
+    if (clickedTitle === title) {
       article.classList.add('active');
-    }    
+    }
   }
 };
 
@@ -67,9 +107,9 @@ const generateTags = () => {
     });
     listTags.innerHTML = tag.join(' ');
   }
+  addTagEventListener();
 };
 
-generateArticles();
 
 //run generate tag
 generateTags();
